@@ -1,0 +1,2 @@
+text= 'Mikokonut'
+print(text)
