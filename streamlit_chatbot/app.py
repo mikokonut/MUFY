@@ -10,29 +10,36 @@ if "expenses" not in st.session_state:
     st.session_state.expenses = []
 
 # User input
-st.subheader("Bank Account Survivor")
+st.subheader("Your Bank Account Survivor")
 
-category = st.selectbox(
+with st.form("expense_form", clear_on_submit = True):
+  category = st.selectbox(
     "Category",
     ["Food", "Transport", "Shopping", "Entertainment", "Study Supplies", "Other"]
 )
 
-amount_input = st.text_input(
+  amount_input = st.text_input(
         "Enter Amount",
 )
-if amount_input:
+  submit = st.form_submit_button("Add Expenses")
+  
+if submit:
    try:
        amount = float(amount_input)
+       
        expense_data = {
-          "Category": category,
-          "Amount": amount
+         "Category": category,
+         "Amount": amount
        }
-
        st.session_state.expenses.append(expense_data)
-
        st.success("Expense Added!")
+
+       st.session_state.amount_input = ""
+
    except ValueError:
        st.error("Please enter a valid number.")
+
+    
 
 # Show data
 if st.session_state.expenses:
@@ -45,7 +52,7 @@ if st.session_state.expenses:
     # Total monthly expense
     total_expense = df["Amount"].sum()
 
-    st.subheader("📅 Monthly Summary")
+    st.subheader("🗓️ Monthly Summary")
     st.write(f"Total Expenses This Month: RM {total_expense:.2f}")
 
     # Category totals
