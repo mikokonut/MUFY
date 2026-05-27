@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="Finance Tracker", layout="centered")
 
@@ -22,7 +23,7 @@ with st.form("expense_form", clear_on_submit = True):
         "Enter Amount",
 )
   submit = st.form_submit_button("Add Expenses")
-  
+
 if submit:
    try:
        amount = float(amount_input)
@@ -59,19 +60,49 @@ if st.session_state.expenses:
     category_summary = df.groupby("Category")["Amount"].sum()
 
     st.subheader("📊 Expenses by Category")
-    st.bar_chart(category_summary)
 
-    # Spending suggestion
+# Define colors for each category
+    color_map = {
+      "Food": "skyblue",
+      "Transport": "lightyellow",
+      "Entertainment": "lightgreen",
+      "Shopping": "plum",
+      "Study Supplies": "pink",
+      "Others": "lightgrey"
+    }
+
+# Match colors to categories
+    colors = [
+      color_map.get(category, "gray")
+      for category in category_summary.index
+    ]
+
+# Create figure
+    fig, ax = plt.subplots()
+
+# Create bar chart
+    ax.bar(
+      category_summary.index,
+      category_summary.values,
+      color=colors
+    )
+
+# Labels
+    ax.set_title("Expenses by Category")
+    ax.set_ylabel("Amount (RM)")
+    ax.set_xlabel("Category")
+
+    st.pyplot(fig)
+
     highest_category = category_summary.idxmax()
     highest_amount = category_summary.max()
 
     st.subheader("💡 Spending Suggestion")
 
     st.warning(
-        f"You spent the most on '{highest_category}' "
-        f"(RM {highest_amount:.2f}). "
-        f"Consider reducing spending in this category."
-    )
-
+     f"You spent the most on '{highest_category}' "
+     f"(RM {highest_amount:.2f}). "
+     f"Consider reducing spending in this category."
+     )
 else:
     st.info("No expenses added yet.")
