@@ -2,7 +2,7 @@ import streamlit as st
 from google import genai
 
 # Configure Gemini API Client
-GOOGLE_API_KEY = "AIzaSyAqLIZsviW4CitQWbbBnf2XL-NU8Ma2Spo"
+
 client = genai.Client(api_key=GOOGLE_API_KEY)
 
 def initialize_session_state():
